@@ -18,11 +18,10 @@ module "vpc" {
   project     = "gitops-example"
   environment = "dev"
 
-  name = "gitops-example-vpc"
   cidr = "10.0.0.0/16"
   azs  = ["us-west-1a", "us-west-1b"]
 
-  private_subnets_cidr   = ["10.0.0.0/20", "10.0.16.0/20", "10.0.32.0/20"]
-  public_subnets_cidr    = ["10.0.112.0/20", "10.0.128.0/20", "10.0.144.0/20"]
+  private_subnets_cidr   = ["10.0.0.0/18", "10.0.64.0/18"]
+  public_subnets_cidr    = ["10.0.128.0/18", "10.0.192.0/18"]
   one_nat_gateway_per_az = false
 }

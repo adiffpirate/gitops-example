@@ -16,7 +16,7 @@ resource "aws_subnet" "public" {
 
   tags = merge(
     {
-      Name = "${var.name}-public-${each.key}",
+      Name = "${var.project}-${var.environment}-public-${each.key}",
       "kubernetes.io/role/elb" = 1
     },
     local.tags
@@ -31,7 +31,7 @@ resource "aws_internet_gateway" "public" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = var.name },
+    { "Name" = "${var.project}-${var.environment}" },
     local.tags
   )
 }
@@ -40,7 +40,7 @@ resource "aws_route_table" "public" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.name}-public" },
+    { "Name" = "${var.project}-${var.environment}-public" },
     local.tags
   )
 }
@@ -66,7 +66,7 @@ resource "aws_eip" "nat" {
   vpc = true
 
   tags = merge(
-    { "Name" = "${var.name}-nat-${each.key}" },
+    { "Name" = "${var.project}-${var.environment}-nat-${each.key}" },
     local.tags
   )
 }
@@ -79,7 +79,7 @@ resource "aws_nat_gateway" "public" {
   allocation_id = aws_eip.nat[each.key].id
 
   tags = merge(
-    { "Name" = "${var.name}-${each.key}" },
+    { "Name" = "${var.project}-${var.environment}-${each.key}" },
     local.tags
   )
 }

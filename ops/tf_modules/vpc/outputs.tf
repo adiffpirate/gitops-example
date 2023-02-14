@@ -1,6 +1,6 @@
 output "name" {
   description = "VPC Name"
-  value       = var.name
+  value       = "${var.project}-${var.environment}"
 }
 
 output "id" {

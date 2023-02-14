@@ -10,7 +10,7 @@ resource "aws_vpc" "vpc" {
   cidr_block = var.cidr
 
   tags = merge(
-    { "Name" = var.name },
+    { "Name" = "${var.project}-${var.environment}" },
     local.tags
   )
 }

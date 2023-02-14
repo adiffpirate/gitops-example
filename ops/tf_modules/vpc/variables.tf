@@ -8,11 +8,6 @@ variable "environment" {
   type        = string
 }
 
-variable "name" {
-  description = "Name to be used on all the resources as identifier"
-  type        = string
-}
-
 variable "cidr" {
   description = "The IPv4 CIDR block for the VPC"
   type        = string
