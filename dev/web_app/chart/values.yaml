@@ -1,0 +1,32 @@
+image:
+  repository: adiffpirate/gitops-example-webapp
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+env:
+  API_HOST: api
+  API_PORT: "80"
+  PYTHONUNBUFFERED: 1
+
+podAnnotations: {}
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+replicaCount: 1
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+service:
+  type: ClusterIP
+  port: 80

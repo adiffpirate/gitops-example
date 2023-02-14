@@ -7,6 +7,9 @@ import os
 app = Flask(__name__)
 db = Connector()
 
+# Initialize database
+db.execute("CREATE TABLE IF NOT EXISTS Stuff(Id SERIAL PRIMARY KEY, Name VARCHAR(100) NOT NULL, Created TIMESTAMP NOT NULL DEFAULT (current_timestamp AT TIME ZONE 'UTC-3'));")
+db.execute(f"INSERT INTO stuff(Name) VALUES ('{os.getenv('HOSTNAME', 'sem_host')}');")
 
 @app.route('/')
 def homepage():

@@ -41,8 +41,7 @@ services:
     restart: unless-stopped
 
   db:
-    build:
-      context: database
+    image: postgres:14.1
     environment:
       POSTGRES_PASSWORD: $DB_PASSWORD
       POSTGRES_USER: $DB_USER
