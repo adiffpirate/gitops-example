@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+	<body>
+		<div>
+			<a href="/database"><button type="button">Database</a>
+			<a href="/envvars"><button type="button">EnvVars</a>
+		</div>
+
+		{% if data %}
+		<table>
+			<tbody>
+				{% for row in data %}
+					<tr>
+						{% for value in row %}
+							<td>{{ value }}</td>
+						{% endfor %}
+					</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		{% endif %}
+	</body>
+</html>
