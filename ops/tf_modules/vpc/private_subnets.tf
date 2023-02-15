@@ -12,8 +12,9 @@ resource "aws_subnet" "private" {
 
   tags = merge(
     {
-      Name = "${var.project}-${var.environment}-private-${each.key}",
-      "kubernetes.io/role/internal-elb" = 1
+      Name  = "${var.project}-${var.environment}-private-${each.key}",
+      scope = "private",
+      "kubernetes.io/role/internal-elb" = 1,
     },
     local.tags
   )
@@ -26,7 +27,10 @@ resource "aws_route_table" "private" {
   vpc_id = local.vpc_id
 
   tags = merge(
-    { "Name" = "${var.project}-${var.environment}-private-${each.key}" },
+    {
+      "Name" = "${var.project}-${var.environment}-private-${each.key}",
+      scope  = "private",
+    },
     local.tags
   )
 }
