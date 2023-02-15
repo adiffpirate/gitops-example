@@ -14,6 +14,8 @@ provider "helm" {
 
 locals {
   cluster_autoscaler_values_default = <<-YAML
+    replicaCount: 2
+
     cloudProvider: aws
     awsRegion: ${var.region}
 
