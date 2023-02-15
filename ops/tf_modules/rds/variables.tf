@@ -56,12 +56,12 @@ variable "instance_type" {
   type        = string
 }
 
-variable "vpc_tags" {
+variable "tags_get_vpc" {
   description = "Tags used to get the VPC (shuld match only one VPC)"
   type        = map(string)
 }
 
-variable "subnets_tags" {
+variable "tags_get_subnets" {
   description = "Tags used to get the list of subnets where the cluster and instances will be created"
   type        = map(string)
 }

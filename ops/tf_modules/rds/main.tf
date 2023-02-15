@@ -57,7 +57,7 @@ resource "aws_rds_cluster_instance" "aurora" {
 }
 
 data "aws_subnets" "database" {
-  tags = var.subnets_tags
+  tags = var.tags_get_subnets
 }
 
 resource "aws_db_subnet_group" "aurora" {

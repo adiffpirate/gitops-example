@@ -34,12 +34,12 @@ module "rds" {
   backup_retention_period = 1
   skip_final_snapshot     = true
 
-  vpc_tags = {
+  tags_get_vpc = {
     "environment" = "dev"
     "project"     = "gitops-example"
   }
 
-  subnets_tags = {
+  tags_get_subnets = {
     "environment" = "dev"
     "project"     = "gitops-example"
     "scope"       = "database"

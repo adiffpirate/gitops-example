@@ -1,5 +1,5 @@
 data "aws_vpc" "vpc" {
-  tags = var.vpc_tags
+  tags = var.tags_get_vpc
 }
 
 resource "aws_security_group" "aurora" {
