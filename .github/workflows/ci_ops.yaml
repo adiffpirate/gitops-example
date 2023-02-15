@@ -1,5 +1,8 @@
 name: CI Ops
 
+on:
+  push:
+
 jobs:
   tflint:
     runs-on: ubuntu-latest
