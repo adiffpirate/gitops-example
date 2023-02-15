@@ -4,7 +4,12 @@ on:
   push:
 
 jobs:
-  tflint:
+  
+  #------#
+  # Lint #
+  #------#
+
+  lint:
     runs-on: ubuntu-latest
 
     steps:
@@ -28,3 +33,22 @@ jobs:
       - name: Run TFLint
         run: tflint --recursive --format compact
         working-directory: ops/tf_modules
+  
+  #------#
+  # SAST #
+  #------#
+
+  sast:
+    runs-on: ubuntu-latest
+    name: checkov-action
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@master
+
+      - name: Run Checkov action
+        id: checkov
+        uses: bridgecrewio/checkov-action@master
+        with:
+          directory: ops/tf_modules
+          quiet: true # optional: display only failed checks
+          framework: terraform # optional: run only on a specific infrastructure {cloudformation,terraform,kubernetes,all}
