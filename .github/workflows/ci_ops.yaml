@@ -25,6 +25,8 @@ jobs:
       - name: Init TFLint
         run: tflint --init
 
+      - run: echo "::add-matcher::matchers.json"
       - name: Run TFLint
         run: tflint --recursive --format compact
         working-directory: ops/tf_modules
+      - run: echo "::remove-matcher owner=tflint-compact::"
