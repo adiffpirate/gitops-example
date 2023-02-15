@@ -11,7 +11,6 @@ jobs:
 
   lint:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
         name: Checkout source code
@@ -40,7 +39,6 @@ jobs:
 
   sast:
     runs-on: ubuntu-latest
-    name: checkov-action
     steps:
       - name: Checkout repo
         uses: actions/checkout@master
