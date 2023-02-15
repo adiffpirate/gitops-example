@@ -61,8 +61,8 @@ variable "vpc_tags" {
   type        = map(string)
 }
 
-variable "private_subnets_tags" {
-  description = "Tags used to get the list of private subnets (should match only private subnets)"
+variable "subnets_tags" {
+  description = "Tags used to get the list of subnets where the cluster and instances will be created"
   type        = map(string)
 }
 

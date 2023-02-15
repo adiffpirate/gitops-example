@@ -1,5 +1,5 @@
 locals {
-  # Map subnets to availability zones
+  # Map subnets CIDR to availability zones
   private_subnets_az_with_cidr = { for az in var.azs : az => element(var.private_subnets_cidr, index(var.azs, az)) }
 }
 
@@ -33,6 +33,18 @@ resource "aws_route_table" "private" {
     },
     local.tags
   )
+}
+
+locals {
+  # Map subnets ID to availability zones
+  private_subnets_az_with_id = { for az in var.azs : az => aws_subnet.private[az].id }
+}
+
+resource "aws_route_table_association" "private" {
+  for_each = local.private_subnets_az_with_id
+
+  subnet_id      = each.value
+  route_table_id = aws_route_table.private[var.one_nat_gateway_per_az ? each.key : "single"].id
 }
 
 resource "aws_route" "private_nat_gateway" {

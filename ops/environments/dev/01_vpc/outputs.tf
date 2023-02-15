@@ -41,3 +41,17 @@ output "public_subnets_arns" {
   description = "ARNs for the public subnets on the VPC"
   value       = module.vpc.public_subnets_arns
 }
+
+output "database_subnets_cidr" {
+  description = "CIDR block for the database subnets"
+  value       = module.vpc.database_subnets_cidr
+}
+output "database_subnets_ids" {
+  description = "IDs for the database subnets on the VPC"
+  value       = module.vpc.database_subnets_ids
+}
+
+output "database_subnets_arns" {
+  description = "ARNs for the database subnets on the VPC"
+  value       = module.vpc.database_subnets_arns
+}

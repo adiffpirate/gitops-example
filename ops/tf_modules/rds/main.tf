@@ -11,12 +11,14 @@ data "aws_secretsmanager_secret_version" "superuser_password" {
 }
 
 resource "aws_rds_cluster" "aurora" {
-  cluster_identifier   = "${var.project}-${var.environment}-aurora-cluster"
-  engine               = var.engine
-  engine_version       = var.engine_version
-  db_subnet_group_name = aws_db_subnet_group.aurora.name
-  availability_zones   = var.azs
-  database_name        = replace(var.project, "/[[:punct:]]/", "")
+  cluster_identifier = "${var.project}-${var.environment}-aurora-cluster"
+  engine             = var.engine
+  engine_version     = var.engine_version
+  database_name      = replace(var.project, "/[[:punct:]]/", "")
+
+  availability_zones     = var.azs
+  db_subnet_group_name   = aws_db_subnet_group.aurora.name
+  vpc_security_group_ids = [aws_security_group.aurora.id]
 
   master_username = var.master_username
   master_password = data.aws_secretsmanager_secret_version.superuser_password.secret_string
@@ -41,10 +43,12 @@ resource "aws_rds_cluster_instance" "aurora" {
 
   identifier           = "${var.project}-${var.environment}-instance-${each.key}"
   cluster_identifier   = aws_rds_cluster.aurora.id
-  instance_class       = var.instance_type
   engine               = aws_rds_cluster.aurora.engine
   engine_version       = aws_rds_cluster.aurora.engine_version
   db_subnet_group_name = aws_db_subnet_group.aurora.name
+  availability_zone    = contains(var.azs, each.key) ? each.key : ""
+  instance_class       = var.instance_type
+  publicly_accessible  = var.public_access
 
   tags = merge(
     { "Name" = "${var.project}-${var.environment}-aurora-instance" },
@@ -52,13 +56,13 @@ resource "aws_rds_cluster_instance" "aurora" {
   )
 }
 
-data "aws_subnets" "private" {
-  tags = var.private_subnets_tags
+data "aws_subnets" "database" {
+  tags = var.subnets_tags
 }
 
 resource "aws_db_subnet_group" "aurora" {
   name       = "${var.project}-${var.environment}-aurora-cluster"
-  subnet_ids = data.aws_subnets.private.ids
+  subnet_ids = data.aws_subnets.database.ids
 
   tags = merge(
     { "Name" = "${var.project}-${var.environment}-aurora-cluster" },

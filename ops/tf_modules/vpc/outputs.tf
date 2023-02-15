@@ -47,3 +47,18 @@ output "public_subnets_arns" {
   description = "ARNs for the public subnets on the VPC"
   value       = values(aws_subnet.public)[*].arn
 }
+
+output "database_subnets_cidr" {
+  description = "CIDR block for the database subnets"
+  value       = var.database_subnets_cidr
+}
+
+output "database_subnets_ids" {
+  description = "IDs for the database subnets on the VPC"
+  value       = values(aws_subnet.database)[*].id
+}
+
+output "database_subnets_arns" {
+  description = "ARNs for the database subnets on the VPC"
+  value       = values(aws_subnet.database)[*].arn
+}

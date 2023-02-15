@@ -3,7 +3,7 @@ output "endpoint" {
   value       = aws_rds_cluster.aurora.endpoint
 }
 
-output "reader_endpoint" {
+output "endpoint_read_only" {
   description = "A read-only endpoint for the Aurora cluster, automatically load-balanced across replicas"
   value       = aws_rds_cluster.aurora.reader_endpoint
 }

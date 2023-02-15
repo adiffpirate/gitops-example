@@ -3,9 +3,9 @@ output "endpoint" {
   value       = module.rds.endpoint
 }
 
-output "reader_endpoint" {
+output "endpoint_read_only" {
   description = "A read-only endpoint for the Aurora cluster, automatically load-balanced across replicas"
-  value       = module.rds.reader_endpoint
+  value       = module.rds.endpoint_read_only
 }
 
 output "port" {

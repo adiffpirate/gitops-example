@@ -39,9 +39,9 @@ module "rds" {
     "project"     = "gitops-example"
   }
 
-  private_subnets_tags = {
+  subnets_tags = {
     "environment" = "dev"
     "project"     = "gitops-example"
-    "scope"       = "private"
+    "scope"       = "database"
   }
 }

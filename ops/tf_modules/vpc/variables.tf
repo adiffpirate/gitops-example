@@ -28,8 +28,19 @@ variable "public_subnets_cidr" {
   type        = list(string)
 }
 
+variable "database_subnets_cidr" {
+  description = "The IPv4 CIDR blocks for the Database Subnets"
+  type        = list(string)
+}
+
 variable "one_nat_gateway_per_az" {
-  description = "Determine if each AZ should have a NAT Gateway or if all AZs should have a single NAT Gateway"
+  description = "Determines whether each AZ should have a NAT Gateway or all AZs should have a single NAT Gateway"
   type        = string
   default     = true
+}
+
+variable "expose_database" {
+  description = "EXTREMELY DANGEROUS: Determines wheter the database subnets are publicly accesible. Should not be enabled in production"
+  type        = string
+  default     = false
 }

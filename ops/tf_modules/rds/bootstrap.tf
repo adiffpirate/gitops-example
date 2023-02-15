@@ -1,9 +1,10 @@
 provider "postgresql" {
-  host     = aws_rds_cluster.aurora.endpoint
-  port     = aws_rds_cluster.aurora.port
-  database = aws_rds_cluster.aurora.database_name
-  username = var.master_username
-  password = data.aws_secretsmanager_secret_version.superuser_password.secret_string
+  host      = aws_rds_cluster.aurora.endpoint
+  port      = aws_rds_cluster.aurora.port
+  database  = aws_rds_cluster.aurora.database_name
+  username  = var.master_username
+  password  = data.aws_secretsmanager_secret_version.superuser_password.secret_string
+  superuser = false
 }
 
 locals {
@@ -29,7 +30,7 @@ resource "postgresql_role" "user" {
 
 resource "postgresql_database" "db" {
   for_each   = local.create_databases
-  depends_on = [aws_rds_cluster_instance.aurora]
+  depends_on = [aws_rds_cluster_instance.aurora, postgresql_role.user]
 
   name  = each.key
   owner = each.key
