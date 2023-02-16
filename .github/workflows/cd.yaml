@@ -76,6 +76,8 @@ jobs:
           APP: ${{ matrix.application }}
           TAG: ${{ steps.vars.outputs.tag }}
         run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
           git add -A
           git commit -m "Bump '${APP}' application tag to ${TAG} on DEV environment"
           git push
