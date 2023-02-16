@@ -29,3 +29,38 @@ resource "kubectl_manifest" "application" {
           selfHeal: true
   YAML
 }
+
+resource "kubectl_manifest" "application_nginx_ingress_controller" {
+  depends_on = [kubectl_manifest.argocd]
+
+  yaml_body = <<-YAML
+    apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: ingress-nginx
+      namespace: argocd
+    spec:
+      project: default
+
+      source:
+        repoURL: https://kubernetes.github.io/ingress-nginx
+        chart: ingress-nginx
+        targetRevision: 4.5.2
+        helm:
+          values: |
+            controller:
+              service:
+                type: LoadBalancer
+                annotations:
+                  service.beta.kubernetes.io/aws-load-balancer-type: nlb
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: ingress-nginx
+
+      syncPolicy:
+        syncOptions:
+          - CreateNamespace=true
+        automated:
+          selfHeal: true
+  YAML
+}
