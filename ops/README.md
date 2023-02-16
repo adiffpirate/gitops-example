@@ -125,7 +125,7 @@ kubectl -n argocd port-forward svc/argocd-server -n argocd 8080:443
 
 But beyond that, ArgoCD will also deploy a Prometheus Server to collect cluster
 metrics and a bunch of Grafana dashboards so we can view more deeply how the cluster
-and our application is performing.
+and our application are performing.
 
 To access Prometheus:
 ```
