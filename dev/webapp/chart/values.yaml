@@ -30,3 +30,18 @@ autoscaling:
 service:
   type: ClusterIP
   port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  labels: {}
+  annotations: {}
+  hosts:
+    - name: ""
+      paths:
+        - /
+      # Set this to true in order to enable TLS on the ingress record
+      tls: false
+      # If TLS is set to true, you must declare what secret will store the key/certificate for TLS
+      # Secrets must be added manually to the namespace
+      # tlsSecret: chartmuseum.domain2-tls
