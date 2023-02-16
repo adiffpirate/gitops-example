@@ -64,6 +64,9 @@ The infrastructure is on AWS, written in Terraform, and consists of:
 ## CI/CD
 
 To achieve Continuous Integration the following GitHub Actions are used:
+- Dev
+  - [Flake8](https://flake8.pycqa.org/en/latest/) for checking the Python code quality;
+  - [Docker](https://www.docker.com/) for building the containerized images.
 - Ops
   - [TFLint](https://github.com/terraform-linters/tflint) for checking the Terraform code quality;
   - [Checkov](https://www.checkov.io/) for SAST, i.e. scanning the Terraform code for security issues.
