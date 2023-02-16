@@ -1,5 +1,5 @@
 image:
-  tag: e953c0b
+  tag: f973ef3
 
 env:
   DB_HOST: gitops-example-dev-aurora-cluster.cluster-c0up5hdxofsf.us-west-1.rds.amazonaws.com
