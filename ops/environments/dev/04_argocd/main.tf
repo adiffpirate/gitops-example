@@ -20,5 +20,9 @@ provider "kubectl" {
 module "argocd" {
   source = "../../../tf_modules/argocd"
 
-  environment = "dev"
+  environment   = "dev"
+  microservices = [
+    "api",
+    "webapp"
+  ]
 }

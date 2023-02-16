@@ -1,3 +1,6 @@
+image:
+  tag: 4f62c7d
+
 env:
   DB_HOST: gitops-example-dev-aurora-cluster.cluster-c0up5hdxofsf.us-west-1.rds.amazonaws.com
   DB_PORT: "5432"
