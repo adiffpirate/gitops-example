@@ -71,5 +71,10 @@ To achieve Continuous Integration the following GitHub Actions are used:
   - [TFLint](https://github.com/terraform-linters/tflint) for checking the Terraform code quality;
   - [Checkov](https://www.checkov.io/) for SAST, i.e. scanning the Terraform code for security issues.
 
-Once the infrastructure is up and running ArgoCD will handle all deployments
-(this way we can achieve Continuous Deployment).
+Once the changes hit the `master` branch a GitHub Action will automatically:
+1. Build and push container images to DockerHub (using commit hash as tag);
+2. Update values at `environments/$ENV/05_applications` with the new image tag;
+3. Push changes from previous step into the `master` branch.
+
+ArgoCD will detect the changes and sync the cluster, giving us Continuous Deployment
+(without any need of human interaction).
