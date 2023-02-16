@@ -58,18 +58,19 @@ jobs:
       - uses: actions/checkout@v3
         name: Checkout source code
       
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      - uses: docker/setup-qemu-action@v2
+        name: Set up QEMU
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+      - uses: docker/setup-buildx-action@v2
+        name: Set up Docker Buildx
 
       - name: Get tag
         id: vars
         run: echo "tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
 
-      - name: Build
-        uses: docker/build-push-action@v4
+      - uses: docker/build-push-action@v4
+        name: Build
+        working-directory: dev/${{ matrix.application }}/src
         with:
           push: false
           tags: ${{ matrix.application }}:${{ steps.vars.outputs.tag }}
