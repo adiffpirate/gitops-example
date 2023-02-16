@@ -67,8 +67,8 @@ For the `dev` environment:
 ```
 sudo sh -c "echo \"$(host $(kubectl get svc -n ingress-nginx | grep LoadBalancer | awk '{print $4}') | head -n1 | awk '{print $4}') gitops-example-dev.foo.bar\" >> /etc/hosts"
 ```
-> webapp: http://gitops-example-dev.foo.bar/
-> api: http://gitops-example-dev.foo.bar/api
+- WEB APP: http://gitops-example-dev.foo.bar/
+- API: http://gitops-example-dev.foo.bar/api
 
 ### Stress Test
 
