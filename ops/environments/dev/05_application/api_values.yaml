@@ -1,0 +1,6 @@
+env:
+  DB_HOST: gitops-example-dev-aurora-cluster.cluster-c0up5hdxofsf.us-west-1.rds.amazonaws.com
+  DB_PORT: "5432"
+  DB_DATABASE: api
+  DB_USER: api
+  DB_PASSWORD: hjyiFN)jZbv{lR]]=(e2)P$OOSkU[2*UGZE=0+pN

@@ -18,5 +18,7 @@ provider "kubectl" {
 }
 
 module "argocd" {
-  source  = "../../../tf_modules/argocd"
+  source = "../../../tf_modules/argocd"
+
+  environment = "dev"
 }
