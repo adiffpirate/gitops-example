@@ -1,0 +1,9 @@
+image:
+  tag: 4f62c7d
+
+env:
+  DB_HOST: gitops-example-dev-aurora-cluster.cluster-c0up5hdxofsf.us-west-1.rds.amazonaws.com
+  DB_PORT: "5432"
+  DB_DATABASE: api
+  DB_USER: api
+  DB_PASSWORD: -ew2vC[k3LO!3L!u+U7Nd*sJl2!w)6S-FLRXz--*

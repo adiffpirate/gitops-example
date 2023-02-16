@@ -12,21 +12,6 @@ provider "aws" {
   profile = "gitops-example-dev"
 }
 
-data "aws_vpc" "vpc" {
-  tags = {
-    "environment" = "dev"
-    "project"     = "gitops-example"
-  }
-}
-
-data "aws_subnets" "subnets" {
-  tags = {
-    "environment" = "dev"
-    "project"     = "gitops-example"
-    "scope"       = "private"
-  }
-}
-
 module "eks" {
   source  = "../../../tf_modules/eks"
 

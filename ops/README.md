@@ -30,37 +30,26 @@ Create [EKS](https://aws.amazon.com/eks):
 DIR='03_eks'; terraform -chdir="$DIR" init && terraform -chdir="$DIR" apply
 ```
 
-## Deploy Application
-
-Before running the steps below, connect to the EKS cluster:
+Before running the step below, connect to the EKS cluster:
 ```
 aws eks update-kubeconfig --name gitops-example-${ENV} --profile gitops-example-${ENV}
 ```
 
-> All commands below assumes that you're inside the environment directory.
-
-### API
-
+Create [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) server and `Applications`:
 ```
-helm upgrade --install api $(git rev-parse --show-toplevel)/dev/api/chart \
-  --namespace app --create-namespace \
-  --set "env.DB_HOST=$(terraform -chdir='02_rds' output -json | jq -r '.endpoint.value')" \
-  --set "env.DB_PORT=$(terraform -chdir='02_rds' output -json | jq -r '.port.value')" \
-  --set "env.DB_DATABASE=api" \
-  --set "env.DB_USER=$(terraform -chdir='02_rds' output -json | jq -r '.created_databases.value.api.user')" \
-  --set "env.DB_PASSWORD=$(terraform -chdir='02_rds' output -json | jq -r '.created_databases.value.api.password')"
+DIR='04_argocd'; terraform -chdir="$DIR" init && terraform -chdir="$DIR" apply
 ```
 
-> To access: kubectl -n app port-forward svc/api 8081:80
+## Deploy Application
 
-### WEB APP
+ArgoCD will take care of deploying everything :)
 
-```
-helm upgrade --install webapp $(git rev-parse --show-toplevel)/dev/web_app/chart \
-  --namespace app --create-namespace
-```
-
-> To access: kubectl -n app port-forward svc/webapp 8080:80
+To create a new app:
+1. Create Helm Chart at `dev/${APP_NAME}/chart`
+2. Create values file at `ops/environments/${ENV}/05_applications/${APP_NAME}_values.yaml`
+3. Add `${APP_NAME}` to the list of `applications` at `ops/environments/${ENV}/04_argocd/main.tf`
+4. Apply changes to ArgoCD (terraform apply)
+5. Commit code. Once it hits the `master` branch ArgoCD will do his magic.
 
 ### Stress test
 
