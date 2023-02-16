@@ -51,7 +51,26 @@ To create a new app:
 4. Apply changes to ArgoCD (terraform apply)
 5. Commit code. Once it hits the `master` branch ArgoCD will do his magic.
 
-### Stress test
+### Access
+
+ArgoCD deploys a [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/)
+which creates a Load Balancer to expose the applications.
+
+To access them an DNS entry should be created for the hosts indicated on each
+application Helm values. Alternatively, you can force the DNS resolution via `/etc/hosts`.
+
+`webapp` will be exposed on path `/` and `api` will be exposed on path `/api`.
+
+#### Example
+
+For the `dev` environment:
+```
+sudo sh -c "echo \"$(host $(kubectl get svc -n ingress-nginx | grep LoadBalancer | awk '{print $4}') | head -n1 | awk '{print $4}') gitops-example-dev.foo.bar\" >> /etc/hosts"
+```
+> webapp: http://gitops-example-dev.foo.bar/
+> api: http://gitops-example-dev.foo.bar/api
+
+### Stress Test
 
 An simple way to stress the application and check if autoscaler kicks-in
 
