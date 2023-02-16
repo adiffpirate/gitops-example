@@ -10,6 +10,34 @@ This repository is divided in two parts:
 > In reality these would be multiple repositories,
 > but we're keeping everything here for the sake of simplicity.
 
+```
+├── dev
+│   │
+│   ├── api
+│   │   ├── chart
+│   │   └── src
+│   │
+│   └── webapp
+│       ├── chart
+│       └── src
+│
+└── ops
+    │
+    ├── environments
+    │   └── dev
+    │       ├── 01_vpc
+    │       ├── 02_rds
+    │       ├── 03_eks
+    │       ├── 04_argocd
+    │       └── 05_applications
+    │
+    └── tf_modules
+        ├── argocd
+        ├── eks
+        ├── rds
+        └── vpc
+```
+
 ## Development
 
 Where the application code is written.
