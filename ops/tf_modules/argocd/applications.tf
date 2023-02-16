@@ -13,7 +13,7 @@ resource "kubectl_manifest" "application" {
 
       source:
         repoURL: https://github.com/adiffpirate/gitops-example
-        targetRevision: feature/argocd
+        targetRevision: master
         path: dev/${each.value}/chart
         helm:
           valueFiles:
