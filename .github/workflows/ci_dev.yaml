@@ -70,7 +70,7 @@ jobs:
 
       - uses: docker/build-push-action@v4
         name: Build
-        working-directory: dev/${{ matrix.application }}
         with:
+          context: dev/${{ matrix.application }}
           push: false
           tags: ${{ matrix.application }}:${{ steps.vars.outputs.tag }}
