@@ -24,7 +24,7 @@ locals {
 
 resource "postgresql_role" "user" {
   for_each   = local.create_databases
-  depends_on = [aws_rds_cluster_instance.aurora]
+  depends_on = [aws_rds_cluster_instance.aurora, aws_security_group_rule.ingress]
 
   name     = each.key
   login    = true
@@ -34,7 +34,7 @@ resource "postgresql_role" "user" {
 
 resource "postgresql_database" "db" {
   for_each   = local.create_databases
-  depends_on = [aws_rds_cluster_instance.aurora, postgresql_role.user]
+  depends_on = [postgresql_role.user]
 
   name  = each.key
   owner = each.key
