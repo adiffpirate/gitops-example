@@ -59,7 +59,11 @@ The infrastructure is on AWS, written in Terraform, and consists of:
 1. A [VPC](https://aws.amazon.com/vpc) with three subnets: public, private and database;
 2. An [Aurora RDS Cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/Aurora.Overview.html);
 3. An [EKS Cluster](https://aws.amazon.com/eks) with autoscaling;
-4. An [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) Server to manage deployment.
+4. An [ArgoCD](https://argo-cd.readthedocs.io/en/stable/) Server that deploys:
+    - The application (WEB APP and API);
+    - [NGINX Ingress Controller](https://kubernetes.github.io/ingress-nginx/);
+    - [Prometheus](https://prometheus.io/);
+    - [Grafana](https://grafana.com/).
 
 ## CI/CD
 

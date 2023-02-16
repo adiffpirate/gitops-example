@@ -137,4 +137,6 @@ To access Grafana:
 kubectl -n monitoring port-forward svc/prometheus-grafana 3000:80
 ```
 > The user is `admin` and the password is on the `prometheus-grafana` secret:
-> `kubectl -n monitoring get secret prometheus-grafana -o jsonpath='{.data.admin-password}' | base64 -d`
+> ```
+> kubectl -n monitoring get secret prometheus-grafana -o jsonpath='{.data.admin-password}' | base64 -d
+> ```
