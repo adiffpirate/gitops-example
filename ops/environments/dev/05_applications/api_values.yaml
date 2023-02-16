@@ -7,3 +7,11 @@ env:
   DB_DATABASE: api
   DB_USER: api
   DB_PASSWORD: -ew2vC[k3LO!3L!u+U7Nd*sJl2!w)6S-FLRXz--*
+
+ingress:
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+  hosts:
+    - name: "gitops-example-dev.foo.bar"
+      paths:
+        - /api(/|$)(.*)
