@@ -1,2 +1,8 @@
 image:
   tag: 4f62c7d
+
+ingress:
+  hosts:
+    - name: "gitops-example-dev.foo.bar"
+      paths:
+        - /
