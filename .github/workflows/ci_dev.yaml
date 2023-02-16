@@ -1,5 +1,11 @@
 name: CI Dev
 
+on:
+  push:
+    paths: ['dev/**']
+  pull_request:
+    paths: ['dev/**']
+
 jobs:
   
   #------#

@@ -1,5 +1,11 @@
 name: CI Ops
 
+on:
+  push:
+    paths: ['ops/**']
+  pull_request:
+    paths: ['ops/**']
+
 jobs:
   
   #------#
