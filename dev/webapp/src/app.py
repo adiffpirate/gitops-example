@@ -24,5 +24,6 @@ def database():
 def envvars():
     data = []
     for key, value in os.environ.items():
-        data.append([key, value])
+        if 'PYTHON' in key:
+            data.append([key, value])
     return render_template('homepage.html', data=data)
