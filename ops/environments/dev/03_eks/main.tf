@@ -31,9 +31,7 @@ module "eks" {
 
       capacity_type  = "SPOT"
       instance_types = [
-        "t3a.small",
         "t3a.medium",
-        "t3.small",
         "t3.medium",
         "t2.medium",
       ]

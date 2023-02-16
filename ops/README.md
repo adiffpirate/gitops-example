@@ -115,3 +115,28 @@ spec:
             memory: 64Mi
 EOF
 ```
+
+## Observability
+
+ArgoCD itself already gives us some observability on the cluster state from its UI. To access it:
+```
+kubectl -n argocd port-forward svc/argocd-server -n argocd 8080:443
+```
+
+But beyond that, ArgoCD will also deploy a Prometheus Server to collect cluster
+metrics and a bunch of Grafana dashboards so we can view more deeply how the cluster
+and our application are performing.
+
+To access Prometheus:
+```
+kubectl -n monitoring port-forward svc/prometheus-kube-prometheus-prometheus 9090
+```
+
+To access Grafana:
+```
+kubectl -n monitoring port-forward svc/prometheus-grafana 3000:80
+```
+> The user is `admin` and the password is on the `prometheus-grafana` secret:
+> ```
+> kubectl -n monitoring get secret prometheus-grafana -o jsonpath='{.data.admin-password}' | base64 -d
+> ```
