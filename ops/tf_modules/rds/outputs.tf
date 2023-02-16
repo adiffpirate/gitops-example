@@ -77,7 +77,8 @@ output "created_databases" {
   value = {
     for db in var.create_databases : db => {
       "user" = db,
-      "password" = data.aws_secretsmanager_secret_version.user_password[db].secret_string
+      # "password" = data.aws_secretsmanager_secret_version.user_password[db].secret_string
+      "password" = db
     }
   }
 }

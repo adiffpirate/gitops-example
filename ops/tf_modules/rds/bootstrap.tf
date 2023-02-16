@@ -12,12 +12,15 @@ locals {
   create_databases = toset(var.engine == "aurora-postgresql" ? var.create_databases : [])
 }
 
-data "aws_secretsmanager_secret_version" "user_password" {
-  for_each = local.create_databases
+# ATTENTION: The auto generation of password is disabled here to make results reproducible,
+# but they should be enabled in real life.
 
-  secret_id  = aws_secretsmanager_secret.user_password[each.key].id
-  version_id = aws_secretsmanager_secret_version.user_password[each.key].version_id
-}
+# data "aws_secretsmanager_secret_version" "user_password" {
+#   for_each = local.create_databases
+#
+#   secret_id  = aws_secretsmanager_secret.user_password[each.key].id
+#   version_id = aws_secretsmanager_secret_version.user_password[each.key].version_id
+# }
 
 resource "postgresql_role" "user" {
   for_each   = local.create_databases
@@ -25,7 +28,8 @@ resource "postgresql_role" "user" {
 
   name     = each.key
   login    = true
-  password = data.aws_secretsmanager_secret_version.user_password[each.key].secret_string
+  # password = data.aws_secretsmanager_secret_version.user_password[each.key].secret_string
+  password = each.key
 }
 
 resource "postgresql_database" "db" {
