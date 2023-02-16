@@ -3,7 +3,7 @@
 #-----------#
 
 resource "aws_secretsmanager_secret" "superuser_password" {
-  name = "aurora-superuser-password-${var.project}-${var.environment}"
+  name = "${var.project}-${var.environment}-aurora-superuser-password"
 
   tags = merge(
     { "Name" = "${var.project}-${var.environment}-aurora-superuser-password" },
