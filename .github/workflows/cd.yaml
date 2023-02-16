@@ -1,4 +1,4 @@
-name: CI Dev
+name: CD
 
 on:
   push:
@@ -43,3 +43,39 @@ jobs:
           context: dev/${{ matrix.application }}
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/gitops-example-${{ matrix.application }}:${{ steps.vars.outputs.tag }}
+
+  #----------------#
+  # Update DEV env #
+  #----------------#
+
+  update-dev-env:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        application: ["webapp", "api"]
+
+    steps:
+      - uses: actions/checkout@v3
+        name: Checkout source code
+
+      - name: Get tag
+        id: vars
+        run: echo "tag=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+      
+      - name: Update tag on values
+        working-directory: ops/environments/dev/05_applications
+        env:
+          APP: ${{ matrix.application }}
+          TAG: ${{ steps.vars.outputs.tag }}
+        run: |
+          sed -i "s/tag: .*/tag: ${TAG}/" ${APP}_values.yaml
+
+      - name: Commit and push changes
+        env:
+          APP: ${{ matrix.application }}
+          TAG: ${{ steps.vars.outputs.tag }}
+        run: |
+          git add -A
+          git commit -m "Bump '${APP}' application tag to ${TAG} on DEV environment"
+          git push
