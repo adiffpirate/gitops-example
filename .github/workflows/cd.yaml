@@ -51,10 +51,6 @@ jobs:
   update-dev-env:
     runs-on: ubuntu-latest
     needs: docker-push
-    
-    strategy:
-      matrix:
-        application: ["webapp", "api"]
 
     steps:
       - uses: actions/checkout@v3
@@ -67,10 +63,10 @@ jobs:
       - name: Update tag on values
         working-directory: ops/environments/dev/05_applications
         env:
-          APP: ${{ matrix.application }}
+          APPS: "webapp api"
           TAG: ${{ steps.vars.outputs.tag }}
         run: |
-          sed -i "s/tag: .*/tag: ${TAG}/" ${APP}_values.yaml
+          for app in $APPS; do sed -i "s/tag: .*/tag: ${TAG}/" ${app}_values.yaml; done
 
       - name: Commit and push changes
         env:
@@ -80,5 +76,5 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           git add -A
-          git commit -m "Bump '${APP}' application tag to ${TAG} on DEV environment"
+          git commit -m "Bump applications tag to ${TAG} on DEV environment"
           git push
