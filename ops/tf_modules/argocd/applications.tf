@@ -29,7 +29,9 @@ resource "kubectl_manifest" "application" {
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
         automated:
+          prune: true
           selfHeal: true
   YAML
 }
@@ -68,7 +70,9 @@ resource "kubectl_manifest" "application_nginx_ingress_controller" {
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
         automated:
+          prune: true
           selfHeal: true
   YAML
 }
@@ -92,9 +96,7 @@ resource "kubectl_manifest" "application_prometheus" {
       source:
         repoURL: https://prometheus-community.github.io/helm-charts
         chart: kube-prometheus-stack
-        targetRevision: 45.1.1
-        helm:
-          skipCrds: true
+        targetRevision: 56.6.2
       destination:
         server: https://kubernetes.default.svc
         namespace: observability
@@ -102,38 +104,10 @@ resource "kubectl_manifest" "application_prometheus" {
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
         automated:
-          selfHeal: true
-  YAML
-}
-
-resource "kubectl_manifest" "application_prometheus_crds" {
-  depends_on = [kubectl_manifest.argocd]
-
-  yaml_body = <<-YAML
-    apiVersion: argoproj.io/v1alpha1
-    kind: Application
-    metadata:
-      name: prometheus-crds
-      namespace: argocd
-    spec:
-      project: default
-
-      source:
-        repoURL: https://github.com/prometheus-community/helm-charts
-        path: charts/kube-prometheus-stack/crds
-        targetRevision: kube-prometheus-stack-45.1.1
-        directory:
-          recurse: true
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: observability
-
-      syncPolicy:
-        syncOptions:
-          - CreateNamespace=true
-          - Replace=true
-        automated:
+          prune: true
           selfHeal: true
   YAML
 }
