@@ -4,7 +4,7 @@
 
 resource "kubectl_manifest" "application" {
   for_each   = toset(var.applications)
-  depends_on = [kubectl_manifest.argocd]
+  depends_on = [helm_release.argocd]
 
   yaml_body = <<-YAML
     apiVersion: argoproj.io/v1alpha1
@@ -41,7 +41,7 @@ resource "kubectl_manifest" "application" {
 #--------------------------#
 
 resource "kubectl_manifest" "application_nginx_ingress_controller" {
-  depends_on = [kubectl_manifest.argocd]
+  depends_on = [helm_release.argocd]
 
   yaml_body = <<-YAML
     apiVersion: argoproj.io/v1alpha1
@@ -82,7 +82,7 @@ resource "kubectl_manifest" "application_nginx_ingress_controller" {
 #-------------------------#
 
 resource "kubectl_manifest" "application_prometheus" {
-  depends_on = [kubectl_manifest.argocd]
+  depends_on = [helm_release.argocd]
 
   yaml_body = <<-YAML
     apiVersion: argoproj.io/v1alpha1
