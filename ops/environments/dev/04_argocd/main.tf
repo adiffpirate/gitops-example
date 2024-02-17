@@ -1,9 +1,7 @@
 terraform {
-  backend "s3" {
-    region         = "us-west-1"
-    bucket         = "gitops-example-dev-terraform-state"
-    key            = "04_argocd/terraform.state"
-    dynamodb_table = "gitops-example-dev-terraform-state-lock"
+  backend "kubernetes" {
+    secret_suffix = "argocd"
+    config_path   = "~/.kube/config"
   }
 
   required_providers {
