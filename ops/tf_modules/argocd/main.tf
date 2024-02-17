@@ -1,20 +1,59 @@
-resource "kubectl_manifest" "namespace" {
-  yaml_body = <<-YAML
-    apiVersion: v1
-    kind: Namespace
-    metadata:
-      name: ${var.namespace}
+locals {
+  argocd_values = <<-YAML
+    server:
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 50m
+          memory: 64Mi
+
+    controller:
+      resources:
+        limits:
+          memory: 256Mi
+        requests:
+          cpu: 250m
+          memory: 256Mi
+
+    repoServer:
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 10m
+          memory: 64Mi
+
+    redis:
+      resources:
+        limits:
+          memory: 64Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+
+    applicationSet:
+      enabled: false
+
+    notifications:
+      enabled: false
+
+    dex:
+      enabled: false
   YAML
 }
 
-data "kubectl_file_documents" "argocd" {
-  content = file("${path.module}/manifest.yaml")
-}
+resource "helm_release" "argocd" {
+  name = "argocd"
 
-resource "kubectl_manifest" "argocd" {
-  for_each   = data.kubectl_file_documents.argocd.manifests
-  depends_on = [kubectl_manifest.namespace]
+  repository = "https://argoproj.github.io/argo-helm"
+  chart      = "argo-cd"
+  version    = "6.1.0"
 
-  yaml_body = each.value
-  override_namespace = var.namespace
+  namespace        = var.namespace
+  create_namespace = true
+
+  values = [
+    local.argocd_values
+  ]
 }

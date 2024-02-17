@@ -4,7 +4,7 @@
 
 resource "kubectl_manifest" "application" {
   for_each   = toset(var.applications)
-  depends_on = [kubectl_manifest.argocd]
+  depends_on = [helm_release.argocd]
 
   yaml_body = <<-YAML
     apiVersion: argoproj.io/v1alpha1
@@ -29,7 +29,9 @@ resource "kubectl_manifest" "application" {
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
         automated:
+          prune: true
           selfHeal: true
   YAML
 }
@@ -39,7 +41,7 @@ resource "kubectl_manifest" "application" {
 #--------------------------#
 
 resource "kubectl_manifest" "application_nginx_ingress_controller" {
-  depends_on = [kubectl_manifest.argocd]
+  depends_on = [helm_release.argocd]
 
   yaml_body = <<-YAML
     apiVersion: argoproj.io/v1alpha1
@@ -68,7 +70,9 @@ resource "kubectl_manifest" "application_nginx_ingress_controller" {
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
+          - ServerSideApply=true
         automated:
+          prune: true
           selfHeal: true
   YAML
 }
@@ -78,7 +82,7 @@ resource "kubectl_manifest" "application_nginx_ingress_controller" {
 #-------------------------#
 
 resource "kubectl_manifest" "application_prometheus" {
-  depends_on = [kubectl_manifest.argocd]
+  depends_on = [helm_release.argocd]
 
   yaml_body = <<-YAML
     apiVersion: argoproj.io/v1alpha1
@@ -92,48 +96,66 @@ resource "kubectl_manifest" "application_prometheus" {
       source:
         repoURL: https://prometheus-community.github.io/helm-charts
         chart: kube-prometheus-stack
-        targetRevision: 45.1.1
+        targetRevision: 56.6.2
         helm:
-          skipCrds: true
+          values: |
+            alertmanager:
+              alertmanagerSpec:
+                logLevel: debug
+              config:
+                global:
+                  resolve_timeout: 5m
+                  smtp_smarthost: ${var.smtp_server}
+                  smtp_from: prometheus@adiffpirate.com
+                  smtp_require_tls: false
+                inhibit_rules:
+                  - source_matchers:
+                      - 'severity = critical'
+                    target_matchers:
+                      - 'severity =~ warning|info'
+                    equal:
+                      - 'namespace'
+                      - 'alertname'
+                  - source_matchers:
+                      - 'severity = warning'
+                    target_matchers:
+                      - 'severity = info'
+                    equal:
+                      - 'namespace'
+                      - 'alertname'
+                  - source_matchers:
+                      - 'alertname = InfoInhibitor'
+                    target_matchers:
+                      - 'severity = info'
+                    equal:
+                      - 'namespace'
+                  - target_matchers:
+                      - 'alertname = InfoInhibitor'
+                route:
+                  group_by: ['namespace']
+                  group_wait: 30s
+                  group_interval: 5m
+                  repeat_interval: 12h
+                  receiver: 'default-receiver'
+                  routes:
+                    - receiver: 'default-receiver'
+                      matchers:
+                        - alertname = "Watchdog"
+                receivers:
+                  - name: 'default-receiver'
+                    email_configs:
+                      - to: ${var.alert_email}
       destination:
         server: https://kubernetes.default.svc
-        namespace: monitoring
+        namespace: observability
 
       syncPolicy:
         syncOptions:
           - CreateNamespace=true
+          - ApplyOutOfSyncOnly=true
+          - ServerSideApply=true
         automated:
-          selfHeal: true
-  YAML
-}
-
-resource "kubectl_manifest" "application_prometheus_crds" {
-  depends_on = [kubectl_manifest.argocd]
-
-  yaml_body = <<-YAML
-    apiVersion: argoproj.io/v1alpha1
-    kind: Application
-    metadata:
-      name: prometheus-crds
-      namespace: argocd
-    spec:
-      project: default
-
-      source:
-        repoURL: https://github.com/prometheus-community/helm-charts
-        path: charts/kube-prometheus-stack/crds
-        targetRevision: kube-prometheus-stack-45.1.1
-        directory:
-          recurse: true
-      destination:
-        server: https://kubernetes.default.svc
-        namespace: monitoring
-
-      syncPolicy:
-        syncOptions:
-          - CreateNamespace=true
-          - Replace=true
-        automated:
+          prune: true
           selfHeal: true
   YAML
 }
