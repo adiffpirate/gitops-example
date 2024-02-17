@@ -97,6 +97,54 @@ resource "kubectl_manifest" "application_prometheus" {
         repoURL: https://prometheus-community.github.io/helm-charts
         chart: kube-prometheus-stack
         targetRevision: 56.6.2
+        helm:
+          values: |
+            alertmanager:
+              alertmanagerSpec:
+                logLevel: debug
+              config:
+                global:
+                  resolve_timeout: 5m
+                  smtp_smarthost: ${var.smtp_server}
+                  smtp_from: prometheus@adiffpirate.com
+                  smtp_require_tls: false
+                inhibit_rules:
+                  - source_matchers:
+                      - 'severity = critical'
+                    target_matchers:
+                      - 'severity =~ warning|info'
+                    equal:
+                      - 'namespace'
+                      - 'alertname'
+                  - source_matchers:
+                      - 'severity = warning'
+                    target_matchers:
+                      - 'severity = info'
+                    equal:
+                      - 'namespace'
+                      - 'alertname'
+                  - source_matchers:
+                      - 'alertname = InfoInhibitor'
+                    target_matchers:
+                      - 'severity = info'
+                    equal:
+                      - 'namespace'
+                  - target_matchers:
+                      - 'alertname = InfoInhibitor'
+                route:
+                  group_by: ['namespace']
+                  group_wait: 30s
+                  group_interval: 5m
+                  repeat_interval: 12h
+                  receiver: 'default-receiver'
+                  routes:
+                    - receiver: 'default-receiver'
+                      matchers:
+                        - alertname = "Watchdog"
+                receivers:
+                  - name: 'default-receiver'
+                    email_configs:
+                      - to: ${var.alert_email}
       destination:
         server: https://kubernetes.default.svc
         namespace: observability

@@ -19,3 +19,13 @@ variable "applications_namespace" {
   type        = string
   default     = "app"
 }
+
+variable "smtp_server" {
+  description = "SMTP server to use when sending emails"
+  type        = string
+}
+
+variable "alert_email" {
+  description = "Email where alerts should be sent to"
+  type        = string
+}

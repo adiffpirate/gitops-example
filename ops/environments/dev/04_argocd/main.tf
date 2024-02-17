@@ -29,4 +29,7 @@ module "argocd" {
     "api",
     "webapp"
   ]
+
+  smtp_server = "smtp.freesmtpservers.com:25" # https://www.wpoven.com/tools/free-smtp-server-for-testing
+  alert_email = "test@adiffpirate.com"
 }
