@@ -124,7 +124,7 @@ kubectl -n argocd port-forward svc/argocd-server -n argocd 8080:443
 ```
 > The user is `admin` and the password is on the `argocd-initial-admin-secret` secret:
 > ```
-> kubectl -n observability get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
+> kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath='{.data.password}' | base64 -d
 > ```
 
 But beyond that, ArgoCD will also deploy a Prometheus Server to collect cluster
