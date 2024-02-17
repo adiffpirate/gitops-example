@@ -97,7 +97,7 @@ resource "kubectl_manifest" "application_prometheus" {
           skipCrds: true
       destination:
         server: https://kubernetes.default.svc
-        namespace: monitoring
+        namespace: observability
 
       syncPolicy:
         syncOptions:
@@ -127,7 +127,7 @@ resource "kubectl_manifest" "application_prometheus_crds" {
           recurse: true
       destination:
         server: https://kubernetes.default.svc
-        namespace: monitoring
+        namespace: observability
 
       syncPolicy:
         syncOptions:
